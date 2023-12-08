@@ -6,17 +6,20 @@ apiKey="&apiKey=048fde22cdb44f41963fb00652ca6298"
 def link(coordenadas,raiom,atraçõeslista):
 
     for x in range(len(atraçõeslista)):
-        url1=url +"?categories=" + atraçõeslista[x]+"&filter=circle:"+coordenadas[0]+","+coordenadas[1]+","+raiom+ "&bias=proximity:" + coordenadas[0]+","+coordenadas[1]+ "&limit=20"+apiKey
+        url1=url +"?categories=" + atraçõeslista[x]+"&filter=circle:"+coordenadas[0]+","+coordenadas[1]+","+raiom+ "&bias=proximity:" + coordenadas[0]+","+coordenadas[1]+ "&limit=3"+apiKey
     return url1
 
     #criei esta função para criar o url, nao sei se esta boa ou nao, pode ser q exista uma me5rda mais rapida e nao vi
 
 def main():
-    localização=input("Ensira a sua posição em latitude e longitude separados por virgula: ")
+    #localização=input("Ensira a sua posição em latitude e longitude separados por virgula: ")
+    localização="48.755151258420966,10.716463143326969"
     coordenadas=localização.split(",")
-    raio=float(input("Quão longe quer viajar em kms: "))
+    #raio=float(input("Quão longe quer viajar em kms: "))
+    raio=5000
     raiom=str(raio*1000)
-    atrações=input("Ensira as suas atrações desejadas separados por virgula: ")
+    #atrações=input("Ensira as suas atrações desejadas separados por virgula: ")
+    atrações = "accommodation,education"
     atraçõeslista=atrações.split(",")
     apil=link(coordenadas,raiom,atraçõeslista)
     #pus isto que sao as cenas q temos que pedir a pessoa, btw aqui em baixo pus tmb a cena com o meu categories pq assim tmb consigo ver isso
@@ -32,9 +35,14 @@ def main():
     
 
 def request(url):
+    aux=0
     response = requests.get(url)
     API_Data = response.json()
-    for key in API_Data:
-        print(key,":", API_Data[key])    
+    #for key in API_Data:
+        #print(, API_Data[key])
+    for key in API_Data["features"]:
+        print(API_Data["features"][aux]["properties"]["name"])
+        print(API_Data["features"][aux]["properties"]["country"])
+        aux=aux+1    
 
 main()
