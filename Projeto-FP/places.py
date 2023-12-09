@@ -27,11 +27,10 @@ def main():
     atrações = "education,accommodation.hotel,accommodation"
     atraçõesList=atrações.split(",")
     apil=link(coordenadas,raiom,atrações)
-    #pus isto que sao as cenas q temos que pedir a pessoa, btw aqui em baixo pus tmb a cena com o meu categories pq assim tmb consigo ver isso
     APIdata=request(apil)
 
-    #with open(r"C:\Users\Utilizador\Desktop\projeto-FP\Projeto-FP\categories.txt") as file:
-        #places = [file.readline()[:-1] for line in file]
+    with open(r"C:\Users\Utilizador\Desktop\projeto-FP\Projeto-FP\categories.txt") as file:
+        places = [file.readline()[:-1] for line in file]
     placesk = {}
     for i in range(limit):
         for j in range(len(atraçõesList)):
