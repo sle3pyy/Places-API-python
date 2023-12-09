@@ -1,46 +1,44 @@
 import requests
 
-testUrl="https://api.geoapify.com/v2/places?categories=commercial.supermarket&filter=rect%3A10.716463143326969%2C48.755151258420966%2C10.835314015356737%2C48.680903341613316&limit=20&apiKey=048fde22cdb44f41963fb00652ca6298"
-url="https://api.geoapify.com/v2/places"
-apiKey="&apiKey=048fde22cdb44f41963fb00652ca6298"
 def link(coordenadas,raiom,atraçõeslista):
-    url1=url +"?categories=" + atraçõeslista +"&filter=circle:"+coordenadas[0]+","+coordenadas[1]+","+raiom+ "&bias=proximity:" + coordenadas[0]+","+coordenadas[1]+ "&limit=20"+apiKey
+    url="https://api.geoapify.com/v2/places"
+    apiKey="&apiKey=048fde22cdb44f41963fb00652ca6298"
+    url1=url +"?categories=" + atraçõeslista +"&filter=circle:"+coordenadas[0]+","+coordenadas[1]+","+raiom+ "&bias=proximity:" + coordenadas[0]+","+coordenadas[1]+ "&limit=10"+apiKey
     print(url1)
     return url1
-
-    #criei esta função para criar o url, nao sei se esta boa ou nao, pode ser q exista uma me5rda mais rapida e nao vi
+    #Função que cria e retorna o url da API
+    
+def request(url):
+    response = requests.get(url)
+    API_Data = response.json()
+    return API_Data 
+    #função que vai buscar os dados da API e retorna para o main       
 
 def main():
-    #localização=input("Ensira a sua posição em latitude e longitude separados por virgula: ")
+    #localização=input("Insira a sua posição em latitude e longitude separados por virgula: ")
     localização="-8.6471993,40.6476206"
     coordenadas=localização.split(",")
     #raio=float(input("Quão longe quer viajar em kms: "))
     raio=5000
     raiom=str(raio*1000)
-    #atrações=input("Ensira as suas atrações desejadas separados por virgula: ")
+    #limit=input("Insira qual o número máximo de lugares que quer ver: ")
+    limit = 10
+    #atrações=input("Insira as suas atrações desejadas separados por virgula: ")
     atrações = "education,accommodation.hotel,accommodation"
+    atraçõesList=atrações.split(",")
     apil=link(coordenadas,raiom,atrações)
     #pus isto que sao as cenas q temos que pedir a pessoa, btw aqui em baixo pus tmb a cena com o meu categories pq assim tmb consigo ver isso
     APIdata=request(apil)
-    aux=0
 
-    with open(r"C:\Users\Utilizador\Desktop\projeto-FP\Projeto-FP\categories.txt") as file:
-        places = [file.readline()[:-1] for line in file]
-        placesk = {}
-        for i in places:
-            placesk[i] = None
-        for key in APIdata["features"]:
-            print(APIdata["features"][aux]["properties"]["name"])
-            print(APIdata["features"][aux]["properties"]["country"])
-            aux=aux+1        
-    #print(placesk)
+    #with open(r"C:\Users\Utilizador\Desktop\projeto-FP\Projeto-FP\categories.txt") as file:
+        #places = [file.readline()[:-1] for line in file]
+    placesk = {}
+    for i in range(limit):
+        for j in range(len(atraçõesList)):
+            if atraçõesList[j] in APIdata["features"][i]["properties"]["categories"]:
+                placesk.setdefault(atraçõesList[j], [])
+                placesk[atraçõesList[j]].append(APIdata["features"][i]["properties"]["name"])
+    print(placesk)
     #placesk é um dicionário com as categorias como chave
-    
-
-def request(url):
-    aux=0
-    response = requests.get(url)
-    API_Data = response.json()
-    return API_Data    
 
 main()

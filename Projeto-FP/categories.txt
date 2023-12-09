@@ -1,3 +1,4 @@
+
 accommodation
 accommodation.hotel
 accommodation.hut
