@@ -23,7 +23,7 @@ def main():
     raiom=str(raio*1000)
     #limit=input("Insira qual o número máximo de lugares que quer ver: ")
     limit = 10
-    #atrações=input("Insira as suas atrações desejadas separados por virgula: ")
+    #atrações=input("Insira as suas atrações desejadas separados por virgula, sem espaços: ")
     atrações = "education,accommodation.hotel,accommodation"
     atraçõesList=atrações.split(",")
     apil=link(coordenadas,raiom,atrações)
