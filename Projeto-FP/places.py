@@ -21,6 +21,7 @@ def main():
     #raio=float(input("Quão longe quer viajar em kms: "))
     raio=5000
     raiom=str(raio*1000)
+    distance=0
     #limit=input("Insira qual o número máximo de lugares que quer ver: ")
     limit = 10
     #atrações=input("Insira as suas atrações desejadas separados por virgula, sem espaços: ")
@@ -29,15 +30,18 @@ def main():
     apil=link(coordenadas,raiom,atrações)
     APIdata=request(apil)
 
-    with open(r"C:\Users\Utilizador\Desktop\projeto-FP\Projeto-FP\categories.txt") as file:
-        places = [file.readline()[:-1] for line in file]
+    #with open(r"C:\Users\Utilizador\Desktop\projeto-FP\Projeto-FP\categories.txt") as file:
+        #places = [file.readline()[:-1] for line in file]
     placesk = {}
     for i in range(limit):
         for j in range(len(atraçõesList)):
             if atraçõesList[j] in APIdata["features"][i]["properties"]["categories"]:
                 placesk.setdefault(atraçõesList[j], [])
                 placesk[atraçõesList[j]].append(APIdata["features"][i]["properties"]["name"])
+                distance = distance + APIdata["features"][i]["properties"]["distance"]
+    medium_distance = distance / limit            
     print(placesk)
+    print("Distancia média: ",medium_distance/1000,"kms")
     #placesk é um dicionário com as categorias como chave
 
 main()
