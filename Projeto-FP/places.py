@@ -22,10 +22,12 @@ def info(APIdata, limit, atraçõesList):
     for i in range(limit):
         a=APIdata["features"][i]["properties"]
         try:
+            print((len(a["name"])+2)*"-")
+            print(a["name"],":")                
             placesk[a["name"]]={}
+            placesk[a["name"]]["country"]=a["country"]
             placesk[a["name"]]["city"]=a["city"]
             placesk[a["name"]]["postcode"]=a["postcode"]
-            placesk[a["name"]]["country"]=a["country"]
             placesk[a["name"]]["street"]=a["street"]
             placesk[a["name"]]["distance"]=str(int(a["distance"])/1000)+" kms"
             placesk[a["name"]]["lon"]=a["lon"]
@@ -33,8 +35,6 @@ def info(APIdata, limit, atraçõesList):
             placesk[a["name"]]["categories"]=a["categories"]
             distance = distance + a["distance"]
             placeNum+=1
-            print((len(a["name"])+2)*"-")
-            print(a["name"],":")                
         except:
             bug=0
         try:
