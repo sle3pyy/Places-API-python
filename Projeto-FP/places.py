@@ -15,32 +15,16 @@ def request(url):
     return API_Data 
     #função que vai buscar os dados da API e retorna para o main       
 
-def main():
-    #localização=input("Insira a sua posição em latitude e longitude separados por virgula: ")
-    localização="-8.6471993,40.6476206"
-    coordenadas=localização.split(",")
-    #raio=float(input("Quão longe quer viajar em kms: "))
-    raio=5000
-    raiom=str(raio*1000)
-    distance=0
-    #limit=input("Insira qual o número máximo de lugares que quer ver: ")
-    limit = 10
-    #atrações=input("Insira as suas atrações desejadas separados por virgula, sem espaços: ")
-    atrações = "education,pet,accommodation"
-    atraçõesList=atrações.split(",")
-    apil=link(coordenadas,raiom,atrações,limit)
-    APIdata=request(apil)
-    aux=0
-
-    #with open(r"categories.txt") as file:
-        #places = [file.readline()[:-1] for line in file]
+def info(APIdata, limit, atraçõesList):
     placesk = {}
-   
+    aux = 0
+    distance = 0
     for i in range(limit):
         a=APIdata["features"][i]["properties"]
         for j in range(len(atraçõesList)):
             if atraçõesList[j] in a["categories"]:
                 try:
+                    print()
                     placesk.setdefault(atraçõesList[j], [])
                     placesk[atraçõesList[j]].append(a["name"])
                     placesk[atraçõesList[j]].append(a["city"])
@@ -58,10 +42,31 @@ def main():
                     placesk[atraçõesList[j]].append(a["datasource"]["raw"]["phone"])  
                 except: 
                     print("idfk")           
-                    
+    return placesk, distance, aux
+    #função que vai buscar os dados que queremos da API e retorna para o main
+
+def main():
+    #localização=input("Insira a sua posição em latitude e longitude separados por virgula: ")
+    localização="-8.6471993,40.6476206"
+    coordenadas=localização.split(",")
+    #raio=float(input("Quão longe quer viajar em kms: "))
+    raio=5000
+    raiom=str(raio*1000)
+    distance=0
+    #limit=input("Insira qual o número máximo de lugares que quer ver: ")
+    limit = 10
+    #atrações=input("Insira as suas atrações desejadas separados por virgula, sem espaços: ")
+    atrações = "education,pet,accommodation"
+    atraçõesList=atrações.split(",")
+    apil=link(coordenadas,raiom,atrações,limit)
+    APIdata=request(apil)
+    #with open(r"categories.txt") as file:
+        #places = [file.readline()[:-1] for line in file]
+    placesk, distance, placeNum = info(APIdata, limit, atraçõesList)
+
     medium_distance = distance / limit            
     print(placesk)
     print("Distancia média:",medium_distance/1000,"kms")
-    print("número de lugares encontrados:", aux)
+    print("número de lugares encontrados:", placeNum)
     #placesk é um dicionário com as categorias como chave
 main()
