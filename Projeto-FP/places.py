@@ -29,6 +29,7 @@ def main():
     atraçõesList=atrações.split(",")
     apil=link(coordenadas,raiom,atrações)
     APIdata=request(apil)
+    aux=0
 
     with open(r"categories.txt") as file:
         places = [file.readline()[:-1] for line in file]
@@ -40,12 +41,13 @@ def main():
                     placesk.setdefault(atraçõesList[j], [])
                     placesk[atraçõesList[j]].append(APIdata["features"][i]["properties"]["name"])
                     distance = distance + APIdata["features"][i]["properties"]["distance"]
+                    aux+=1
                 except:
                     print("hi")
     medium_distance = distance / limit            
     print(placesk)
     print("Distancia média:",medium_distance/1000,"kms")
-    print("número de lugares encontrados:", len(APIdata["features"]))
+    print("número de lugares encontrados:", aux)
     #placesk é um dicionário com as categorias como chave
 
 main()
