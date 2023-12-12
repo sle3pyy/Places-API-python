@@ -21,27 +21,29 @@ def info(APIdata, limit, atraçõesList):
     distance = 0
     for i in range(limit):
         a=APIdata["features"][i]["properties"]
-        for j in range(len(atraçõesList)):
-            if atraçõesList[j] in a["categories"]:
-                try:
-                    print()
-                    placesk.setdefault(atraçõesList[j], [])
-                    placesk[atraçõesList[j]].append(a["name"])
-                    placesk[atraçõesList[j]].append(a["city"])
-                    placesk[atraçõesList[j]].append(a["postcode"])
-                    placesk[atraçõesList[j]].append(a["country"])
-                    placesk[atraçõesList[j]].append(a["street"])
-                    placesk[atraçõesList[j]].append(a["distance"])
-                    placesk[atraçõesList[j]].append(a["lon"])
-                    placesk[atraçõesList[j]].append(a["lat"])
-                    distance = distance + a["distance"]
-                    placeNum+=1
-                except:
-                    print("bug")
-                try:
-                    placesk[atraçõesList[j]].append(a["datasource"]["raw"]["phone"])  
-                except: 
-                    print("idfk")           
+        try:
+            placesk[a["name"]]={}
+            placesk[a["name"]]["city"]=a["city"]
+            placesk[a["name"]]["postcode"]=a["postcode"]
+            placesk[a["name"]]["country"]=a["country"]
+            placesk[a["name"]]["street"]=a["street"]
+            placesk[a["name"]]["distance"]=a["distance"]
+            placesk[a["name"]]["lon"]=a["lon"]
+            placesk[a["name"]]["lat"]=a["lat"]
+            placesk[a["name"]]["categories"]=a["categories"]
+            distance = distance + a["distance"]
+            placeNum+=1
+                    
+        except:
+            print("bug")
+        try:
+            placesk[a["name"]]["phone"]=a["datasource"]["raw"]["phone"] 
+        except: 
+            print("idfk")
+        print((len(a["name"])+2)*"-")
+        print(a["name"],":")    
+        for i in placesk[a["name"]]:
+            print(i,":",placesk[a["name"]][i])       
     return placesk, distance, placeNum
     #função que vai buscar os dados que queremos da API e retorna para o main
 
@@ -65,7 +67,8 @@ def main():
     placesk, distance, placeNum = info(APIdata, limit, atraçõesList)
 
     medium_distance = distance / limit            
-    print(placesk)
+    #print(placesk)
+    print("\n")
     print("Distancia média:",medium_distance/1000,"kms")
     print("número de lugares encontrados:", placeNum)
     #placesk é um dicionário com as categorias como chave
