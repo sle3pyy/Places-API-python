@@ -16,7 +16,7 @@ def request(url):
 
 def info(APIdata, limit, atraçõesList):
     placesk = {}
-    limit=int(limit)
+    limit=len(APIdata["features"])
     placeNum = 0
     distance = 0
     for i in range(limit):
@@ -50,15 +50,15 @@ def info(APIdata, limit, atraçõesList):
     #função que vai buscar os dados que queremos da API e retorna para o main
 
 def main():
-    #localização=input("Insira a sua posição em latitude e longitude separados por virgula: ")
-    localização="-8.6471993,40.6476206"
+    localização=input("Insira a sua posição em latitude e longitude separados por virgula: ")
+    #localização="-8.6471993,40.6476206"
     coordenadas=localização.split(",")
-    #raio=float(input("Quão longe quer viajar em kms: "))
-    raio=5000
+    raio=float(input("Quão longe quer viajar em kms: "))
+    #raio=5000
     raiom=str(raio*1000)
     distance=0
-    #limit=int(input("Insira qual o número máximo de lugares que quer ver: "))
-    limit = 10
+    limit=int(input("Insira qual o número máximo de lugares que quer ver: "))
+    #limit = 10
     #atrações=input("Insira as suas atrações desejadas separados por virgula, sem espaços: ")
     atrações = "pet,accommodation"
     atraçõesList=atrações.split(",")
