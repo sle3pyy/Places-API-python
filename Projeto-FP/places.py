@@ -17,7 +17,7 @@ def request(url):
 
 def info(APIdata, limit, atraçõesList):
     placesk = {}
-    aux = 0
+    placeNum = 0
     distance = 0
     for i in range(limit):
         a=APIdata["features"][i]["properties"]
@@ -35,14 +35,14 @@ def info(APIdata, limit, atraçõesList):
                     placesk[atraçõesList[j]].append(a["lon"])
                     placesk[atraçõesList[j]].append(a["lat"])
                     distance = distance + a["distance"]
-                    aux+=1
+                    placeNum+=1
                 except:
                     print("bug")
                 try:
                     placesk[atraçõesList[j]].append(a["datasource"]["raw"]["phone"])  
                 except: 
                     print("idfk")           
-    return placesk, distance, aux
+    return placesk, distance, placeNum
     #função que vai buscar os dados que queremos da API e retorna para o main
 
 def main():
