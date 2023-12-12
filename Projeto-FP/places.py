@@ -40,6 +40,10 @@ def main():
                 try:
                     placesk.setdefault(atraçõesList[j], [])
                     placesk[atraçõesList[j]].append(APIdata["features"][i]["properties"]["name"])
+                    placesk[atraçõesList[j]].append(APIdata["features"][i]["properties"]["country"])
+                    placesk[atraçõesList[j]].append(APIdata["features"][i]["properties"]["distance"])
+                    placesk[atraçõesList[j]].append(APIdata["features"][i]["properties"]["lon"])
+                    placesk[atraçõesList[j]].append(APIdata["features"][i]["properties"]["lat"])
                     distance = distance + APIdata["features"][i]["properties"]["distance"]
                     aux+=1
                 except:
