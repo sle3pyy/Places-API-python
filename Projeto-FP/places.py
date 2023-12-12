@@ -43,7 +43,8 @@ def main():
                     distance = distance + APIdata["features"][i]["properties"]["distance"]
                     aux+=1
                 except:
-                    print("hi")
+                    print("bug")
+                    
     medium_distance = distance / limit            
     print(placesk)
     print("Distancia média:",medium_distance/1000,"kms")
