@@ -42,7 +42,6 @@ def main():
             if atraçõesList[j] in a["categories"]:
                 try:
                     placesk.setdefault(atraçõesList[j], [])
-                    
                     placesk[atraçõesList[j]].append(a["name"])
                     placesk[atraçõesList[j]].append(a["city"])
                     placesk[atraçõesList[j]].append(a["postcode"])
@@ -51,7 +50,6 @@ def main():
                     placesk[atraçõesList[j]].append(a["distance"])
                     placesk[atraçõesList[j]].append(a["lon"])
                     placesk[atraçõesList[j]].append(a["lat"])
-                    
                     distance = distance + a["distance"]
                     aux+=1
                 except:
