@@ -14,7 +14,7 @@ def request(url):
     return API_Data 
     #função que vai buscar os dados da API e retorna para o main       
 
-def info(APIdata, limit, atraçõesList):
+def info(APIdata, limit):
     placesk = {}
     limit=len(APIdata["features"])
     placeNum = 0
@@ -59,6 +59,8 @@ def main():
     #atrações=input("Insira as suas atrações desejadas separados por virgula, sem espaços: ")
     atrações = "pet,accommodation"
     atraçõesList=atrações.split(",")
+    with open(r"categories.txt") as file:
+        places = [file.readline()[:-1] for line in file]
     apil=link(coordenadas,raiom,atrações,limit)
     APIdata=request(apil)
     #with open(r"categories.txt") as file:
@@ -66,7 +68,6 @@ def main():
     distance, placeNum = info(APIdata, limit, atraçõesList)
 
     medium_distance = distance / placeNum            
-    #print(placesk)
     print("\n")
     print("Distancia média:",medium_distance/1000,"kms")
     print("número de lugares encontrados:", placeNum)
