@@ -35,18 +35,15 @@ def info(APIdata, limit, atraçõesList):
             placesk[a["name"]]["categories"]=a["categories"]
             distance = distance + a["distance"]
             placeNum+=1
+            placesk[a["name"]]["phone"]=a["datasource"]["raw"]["phone"]
         except:
-            bug=0
-        try:
-            placesk[a["name"]]["phone"]=a["datasource"]["raw"]["phone"] 
-        except: 
            bug=0
         try:
             for i in placesk[a["name"]]:
                 print(i,":",placesk[a["name"]][i])
         except:
             bug=0       
-    return placesk, distance, placeNum
+    return distance, placeNum
     #função que vai buscar os dados que queremos da API e retorna para o main
 
 def main():
@@ -66,9 +63,9 @@ def main():
     APIdata=request(apil)
     #with open(r"categories.txt") as file:
         #places = [file.readline()[:-1] for line in file]
-    placesk, distance, placeNum = info(APIdata, limit, atraçõesList)
+    distance, placeNum = info(APIdata, limit, atraçõesList)
 
-    medium_distance = distance / limit            
+    medium_distance = distance / placeNum            
     #print(placesk)
     print("\n")
     print("Distancia média:",medium_distance/1000,"kms")
