@@ -105,7 +105,7 @@ def filtrar(placesk, filtro):
             
 def main(filtro):
     #localização=input("Insira a sua posição em latitude e longitude separados por virgula: ")
-    localização="10,10"
+    localização="20,54"
     coordenadas=localização.split(",")
     #raio=float(input("Quão longe quer viajar em kms: "))
     raio=5000
@@ -131,12 +131,16 @@ def main(filtro):
     #with open(r"categories.txt") as file:
                     #places = [file.readline()[:-1] for line in file]
     distance, placeNum = info(APIdata, limit, filtro)
-
-    medium_distance = distance / placeNum            
-    print("\n")
-    print("Distancia média:",medium_distance/1000,"kms")
-    print("número de lugares encontrados:", placeNum)
-                #placesk é um dicionário com as categorias como chave
+    
+    if placeNum == 0:
+        print("Não foi encontrado nada nestas condições")
+    else:
+        medium_distance = distance / placeNum            
+        print("\n")
+        print("Distancia média:",medium_distance/1000,"kms")
+        print("número de lugares encontrados:", placeNum)
+        
+        
 def menu():
     print("Bem-vindo a pesquisa das suas atrações favoritas")
     print("Opções")
