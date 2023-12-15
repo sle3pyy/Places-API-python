@@ -46,6 +46,7 @@ def info(APIdata, limit, filtro):
             bug=(placesk[a["name"]])
             try:
                 bug=(placesk[a["name"]]["distance"])
+                bug=(placesk[a["name"]]["categories"])
             except:
                 placesk.pop(a["name"], None)  
         except:
