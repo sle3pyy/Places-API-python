@@ -128,8 +128,6 @@ def main(filtro):
     #print(atrações)
     apil=link(coordenadas,raiom,atrações,limit)
     APIdata=request(apil)
-    #with open(r"categories.txt") as file:
-                    #places = [file.readline()[:-1] for line in file]
     distance, placeNum = info(APIdata, filtro)
     
     if placeNum == 0:
