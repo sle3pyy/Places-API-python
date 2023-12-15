@@ -104,22 +104,30 @@ def main(filtro):
     #limit=int(input("Insira qual o número máximo de lugares que quer ver: "))
     limit = 10
     #atrações=input("Insira as suas atrações desejadas separados por virgula, sem espaços: ")
-    atrações = "pet,accommodation"
+    atrações = "pet,accommodation,caralho"
     atraçõesList=atrações.split(",")
     with open(r"C:\\Users\\franc\\Documents\\FP\\projeto-FP\\Projeto-FP\\categories.txt") as file:
-        places = [file.readline()[:-1] for line in file]
+        places = [line[:-1] for line in file]
+        for i in range(len(atraçõesList)):
+            if atraçõesList[i] in places:
+                print(f"{atraçõesList[i]} existe")
+                
+            else:
+                print(f"{atraçõesList[i]} não existe")
+                atraçõesList.pop(i)
+                atrações=",".join(atraçõesList)
+    print(atrações)
     apil=link(coordenadas,raiom,atrações,limit)
     APIdata=request(apil)
     #with open(r"categories.txt") as file:
-        #places = [file.readline()[:-1] for line in file]
-    distance, placeNum = info(APIdata, limit, atraçõesList, filtro)
+                    #places = [file.readline()[:-1] for line in file]
+    distance, placeNum = info(APIdata, limit, atrações, filtro)
 
     medium_distance = distance / placeNum            
     print("\n")
     print("Distancia média:",medium_distance/1000,"kms")
     print("número de lugares encontrados:", placeNum)
-    #placesk é um dicionário com as categorias como chave
-
+                #placesk é um dicionário com as categorias como chave
 def menu():
     print("Bem-vindo a pesquisa das suas atrações favoritas")
     print("Opções")
