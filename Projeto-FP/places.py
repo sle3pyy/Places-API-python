@@ -14,15 +14,15 @@ def request(url):
     return API_Data 
     #função que vai buscar os dados da API e retorna para o main       
 
-def info(APIdata, limit, atraçõesList, filtro):
+def info(APIdata, limit, filtro):
     placesk = {}
     limit=len(APIdata["features"])
     placeNum = 0
     distance = 0
-    print(filtro)
+    
+    
     for i in range(limit):
         a=APIdata["features"][i]["properties"]
-        
         try:
             #print((len(a["name"])+2)*"-")
             #print(a["name"],":")                
@@ -41,15 +41,22 @@ def info(APIdata, limit, atraçõesList, filtro):
             
         except:
            bug=0
-        #try:
-            #for i in placesk[a["name"]]:
-                #print(i,":",placesk[a["name"]][i])
-       # except:
-           # bug=0 
+        
+        try:
+            bug=(placesk[a["name"]])
+            try:
+                bug=(placesk[a["name"]]["distance"])
+            except:
+                placesk.pop(a["name"], None)  
+        except:
+            bug=0           
+                
     #print(placesk)
     filtrar(placesk, filtro)
     return distance, placeNum
     #função que vai buscar os dados que queremos da API e retorna para o main
+    
+    
 def filtrar(placesk, filtro):
     if filtro=="1":
         listaAlfabetica = sorted(placesk.items(), key=lambda x: x[0])
@@ -67,7 +74,7 @@ def filtrar(placesk, filtro):
             print(f'{key}:')
             for key2, valor in dados.items():
                 print(f'{key2}: {valor}')
-            print("\n") 
+            print("\n")         
 
     elif filtro=="3":
         listaDistanciaMaior = sorted(placesk.items(), key=lambda x: float(x[1]['distance'].split(' ')[0]), reverse=True)
@@ -93,9 +100,11 @@ def filtrar(placesk, filtro):
             for key2, valor in dados.items():
                 print(f'{key2}: {valor}')
             print("\n")
+            
+            
 def main(filtro):
     #localização=input("Insira a sua posição em latitude e longitude separados por virgula: ")
-    localização="-8.6471993,40.6476206"
+    localização="10,10"
     coordenadas=localização.split(",")
     #raio=float(input("Quão longe quer viajar em kms: "))
     raio=5000
@@ -104,24 +113,23 @@ def main(filtro):
     #limit=int(input("Insira qual o número máximo de lugares que quer ver: "))
     limit = 10
     #atrações=input("Insira as suas atrações desejadas separados por virgula, sem espaços: ")
-    atrações = "pet,accommodation,caralho"
+    atrações = "pet,bingus,accommodation,caralho,yeet,commercial,food,drikn"
     atraçõesList=atrações.split(",")
-    with open(r"C:\\Users\\franc\\Documents\\FP\\projeto-FP\\Projeto-FP\\categories.txt") as file:
+    
+    with open(r"categories.txt") as file:
         places = [line[:-1] for line in file]
-        for i in range(len(atraçõesList)):
-            if atraçõesList[i] in places:
-                print(f"{atraçõesList[i]} existe")
-                
-            else:
-                print(f"{atraçõesList[i]} não existe")
-                atraçõesList.pop(i)
-                atrações=",".join(atraçõesList)
-    print(atrações)
+    for i in range(len(atraçõesList)-1, -1, -1): 
+        if atraçõesList[i] not in places:
+            #print(f"{atraçõesList[i]} existe")
+            #print(f"{atraçõesList[i]} não existe")
+            atraçõesList.pop(i)
+            atrações=",".join(atraçõesList)
+    #print(atrações)
     apil=link(coordenadas,raiom,atrações,limit)
     APIdata=request(apil)
     #with open(r"categories.txt") as file:
                     #places = [file.readline()[:-1] for line in file]
-    distance, placeNum = info(APIdata, limit, atrações, filtro)
+    distance, placeNum = info(APIdata, limit, filtro)
 
     medium_distance = distance / placeNum            
     print("\n")
@@ -137,7 +145,7 @@ def menu():
     print("4-Ordenar por número de categorias, crescente")
     print("5-Ordenar por número de categorias, decrescente")
 
-    filtro=input("Escolha o filtro")
+    filtro=input("Escolha o filtro: ")
     if filtro in ("1", "2", "3", "4", "5"):
         main(filtro)
     else:
