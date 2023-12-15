@@ -14,16 +14,18 @@ def request(url):
     return API_Data 
     #função que vai buscar os dados da API e retorna para o main       
 
-def info(APIdata, limit):
+def info(APIdata, limit, atraçõesList, filtro):
     placesk = {}
     limit=len(APIdata["features"])
     placeNum = 0
     distance = 0
+    print(filtro)
     for i in range(limit):
         a=APIdata["features"][i]["properties"]
+        
         try:
-            print((len(a["name"])+2)*"-")
-            print(a["name"],":")                
+            #print((len(a["name"])+2)*"-")
+            #print(a["name"],":")                
             placesk[a["name"]]={}
             placesk[a["name"]]["country"]=a["country"]
             placesk[a["name"]]["city"]=a["city"]
@@ -36,40 +38,102 @@ def info(APIdata, limit):
             distance = distance + a["distance"]
             placeNum+=1
             placesk[a["name"]]["phone"]=a["datasource"]["raw"]["phone"]
+            
         except:
            bug=0
-        try:
-            for i in placesk[a["name"]]:
-                print(i,":",placesk[a["name"]][i])
-        except:
-            bug=0       
+        #try:
+            #for i in placesk[a["name"]]:
+                #print(i,":",placesk[a["name"]][i])
+       # except:
+           # bug=0 
+    #print(placesk)
+    filtrar(placesk, filtro)
     return distance, placeNum
     #função que vai buscar os dados que queremos da API e retorna para o main
+def filtrar(placesk, filtro):
+    if filtro=="1":
+        listaAlfabetica = sorted(placesk.items(), key=lambda x: x[0])
+        dicAlfabetico = dict(listaAlfabetica)
+        for key, dados in dicAlfabetico.items():
+            print(f'{key}:')
+            for key2, valor in dados.items():
+                print(f'{key2}: {valor}')
+            print("\n")    
+            
+    elif filtro=="2":
+        listaDistanciaMenor = sorted(placesk.items(), key=lambda x: float(x[1]['distance'].split(' ')[0]))
+        dicDistanciaMenor = dict(listaDistanciaMenor)
+        for key, dados in dicDistanciaMenor.items():
+            print(f'{key}:')
+            for key2, valor in dados.items():
+                print(f'{key2}: {valor}')
+            print("\n") 
 
-def main():
-    localização=input("Insira a sua posição em latitude e longitude separados por virgula: ")
-    #localização="-8.6471993,40.6476206"
+    elif filtro=="3":
+        listaDistanciaMaior = sorted(placesk.items(), key=lambda x: float(x[1]['distance'].split(' ')[0]), reverse=True)
+        dicDistanciaMaior = dict(listaDistanciaMaior)
+        for key, dados in dicDistanciaMaior.items():
+            print(f'{key}:')
+            for key2, valor in dados.items():
+                print(f'{key2}: {valor}')
+            print("\n")
+    elif filtro=="4":
+        listaNumCategoriasMenor = sorted(placesk.items(), key=lambda x: len(x[1]['categories']))
+        dicCategoriasMenor = dict(listaNumCategoriasMenor)
+        for key, dados in dicCategoriasMenor.items():
+            print(f'{key}:')
+            for key2, valor in dados.items():
+                print(f'{key2}: {valor}')
+            print("\n")
+    elif filtro=="5":
+        listaNumCategoriasMaior = sorted(placesk.items(), key=lambda x: len(x[1]['categories']), reverse=True)
+        dicCategoriasMaior = dict(listaNumCategoriasMaior)
+        for key, dados in dicCategoriasMaior.items():
+            print(f'{key}:')
+            for key2, valor in dados.items():
+                print(f'{key2}: {valor}')
+            print("\n")
+def main(filtro):
+    #localização=input("Insira a sua posição em latitude e longitude separados por virgula: ")
+    localização="-8.6471993,40.6476206"
     coordenadas=localização.split(",")
-    raio=float(input("Quão longe quer viajar em kms: "))
-    #raio=5000
+    #raio=float(input("Quão longe quer viajar em kms: "))
+    raio=5000
     raiom=str(raio*1000)
     distance=0
-    limit=int(input("Insira qual o número máximo de lugares que quer ver: "))
-    #limit = 10
+    #limit=int(input("Insira qual o número máximo de lugares que quer ver: "))
+    limit = 10
     #atrações=input("Insira as suas atrações desejadas separados por virgula, sem espaços: ")
     atrações = "pet,accommodation"
     atraçõesList=atrações.split(",")
-    with open(r"categories.txt") as file:
+    with open(r"C:\\Users\\franc\\Documents\\FP\\projeto-FP\\Projeto-FP\\categories.txt") as file:
         places = [file.readline()[:-1] for line in file]
     apil=link(coordenadas,raiom,atrações,limit)
     APIdata=request(apil)
     #with open(r"categories.txt") as file:
         #places = [file.readline()[:-1] for line in file]
-    distance, placeNum = info(APIdata, limit, atraçõesList)
+    distance, placeNum = info(APIdata, limit, atraçõesList, filtro)
 
     medium_distance = distance / placeNum            
     print("\n")
     print("Distancia média:",medium_distance/1000,"kms")
     print("número de lugares encontrados:", placeNum)
     #placesk é um dicionário com as categorias como chave
-main()
+
+def menu():
+    print("Bem-vindo a pesquisa das suas atrações favoritas")
+    print("Opções")
+    print("1-Ordenar por ordem alfabética")
+    print("2-Ordenar por distância crescente")
+    print("3-Ordenar por distância decrescente")
+    print("4-Ordenar por número de categorias, crescente")
+    print("5-Ordenar por número de categorias, decrescente")
+
+    filtro=input("Escolha o filtro")
+    if filtro in ("1", "2", "3", "4", "5"):
+        main(filtro)
+    else:
+        print("Valor inválido")
+        menu()
+
+menu()
