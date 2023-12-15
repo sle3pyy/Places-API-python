@@ -14,7 +14,7 @@ def request(url):
     return API_Data 
     #função que vai buscar os dados da API e retorna para o main       
 
-def info(APIdata, limit, filtro):
+def info(APIdata, filtro):
     placesk = {}
     limit=len(APIdata["features"])
     placeNum = 0
@@ -130,7 +130,7 @@ def main(filtro):
     APIdata=request(apil)
     #with open(r"categories.txt") as file:
                     #places = [file.readline()[:-1] for line in file]
-    distance, placeNum = info(APIdata, limit, filtro)
+    distance, placeNum = info(APIdata, filtro)
     
     if placeNum == 0:
         print("Não foi encontrado nada nestas condições")
