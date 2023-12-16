@@ -3,6 +3,7 @@ import requests
 def link(coordenadas,raiom,atraçõeslista,limit):
     url="https://api.geoapify.com/v2/places"
     apiKey="&apiKey=048fde22cdb44f41963fb00652ca6298"
+    limit = str(limit)
     url1=url +"?categories=" + atraçõeslista +"&filter=circle:"+coordenadas[0]+","+coordenadas[1]+","+raiom+ "&bias=proximity:" + coordenadas[0]+","+coordenadas[1]+ "&limit="+ limit + apiKey
     return url1
     #Função que cria e retorna o url da API
@@ -15,16 +16,13 @@ def request(url):
 
 def info(APIdata, filtro):
     placesk = {}
-    limit=len(APIdata["features"])
     placeNum = 0
     distance = 0
     
-    
-    for i in range(limit):
+    #ciclo que vai buscar os dados que queremos da API e coloca num dicionario, parando quando não encontra os dados necessarios
+    for i in range(len(APIdata["features"])):
         a=APIdata["features"][i]["properties"]
-        try:
-            #print((len(a["name"])+2)*"-")
-            #print(a["name"],":")                
+        try:            
             placesk[a["name"]]={}
             placesk[a["name"]]["country"]=a["country"]
             placesk[a["name"]]["city"]=a["city"]
@@ -41,6 +39,7 @@ def info(APIdata, filtro):
         except:
            bug=0
         
+        #remove os lugares que não tem o necessário para os filtros funcionarem
         try:
             bug=(placesk[a["name"]])
             try:
@@ -51,10 +50,10 @@ def info(APIdata, filtro):
         except:
             bug=0           
                 
-    #print(placesk)
+    #manda os dados recolhidos para a filtrar e retorna o numero de lugares encontrados e a distancia total
     filtrar(placesk, filtro)
     return distance, placeNum
-    #função que vai buscar os dados que queremos da API e retorna para o main
+   
     
     
 def filtrar(placesk, filtro):
