@@ -3,7 +3,6 @@ import requests
 def link(coordenadas,raiom,atraçõeslista,limit):
     url="https://api.geoapify.com/v2/places"
     apiKey="&apiKey=048fde22cdb44f41963fb00652ca6298"
-    limit = str(limit)
     url1=url +"?categories=" + atraçõeslista +"&filter=circle:"+coordenadas[0]+","+coordenadas[1]+","+raiom+ "&bias=proximity:" + coordenadas[0]+","+coordenadas[1]+ "&limit="+ limit + apiKey
     return url1
     #Função que cria e retorna o url da API
@@ -107,6 +106,8 @@ def filtrar(placesk, filtro):
             
             
 def main(filtro):
+
+    #input do utilizador:
     #localização=input("Insira a sua posição em latitude e longitude separados por virgula: ")
     localização="20,54"
     coordenadas=localização.split(",")
@@ -120,15 +121,16 @@ def main(filtro):
     atrações = "pet,bingus,accommodation,caralho,yeet,commercial,food,drikn"
     atraçõesList=atrações.split(",")
     
+    #criação de uma lista com as categorias existentes para comparação:
     with open(r"categories.txt") as file:
         places = [line[:-1] for line in file]
+    #comparação entre a lista de categorias e a lista de categorias inseridas pelo utilizador para eliminar as categorias que não existem:    
     for i in range(len(atraçõesList)-1, -1, -1): 
         if atraçõesList[i] not in places:
-            #print(f"{atraçõesList[i]} existe")
-            #print(f"{atraçõesList[i]} não existe")
             atraçõesList.pop(i)
             atrações=",".join(atraçõesList)
-    #print(atrações)
+
+    #criação do url, pedido dos dados e filtragem dos dados:
     apil=link(coordenadas,raiom,atrações,limit)
     APIdata=request(apil)
     distance, placeNum = info(APIdata, filtro)
