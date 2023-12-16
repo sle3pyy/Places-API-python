@@ -59,7 +59,9 @@ def info(APIdata, filtro):
     
     
 def filtrar(placesk, filtro):
+    #função que procura dentro do dicionario placesk o primeiro a chave que é cada nome da atração e depois analisa o dicionario do valor de cada chave e escolhe o valor para ordenar
     if filtro=="1":
+        #neste bastou analisar a primeira chave
         listaAlfabetica = sorted(placesk.items(), key=lambda x: x[0])
         dicAlfabetico = dict(listaAlfabetica)
         for key, dados in dicAlfabetico.items():
@@ -69,7 +71,8 @@ def filtrar(placesk, filtro):
             print("\n")    
             
     elif filtro=="2":
-        listaDistanciaMenor = sorted(placesk.items(), key=lambda x: float(x[1]['distance'].split(' ')[0]))
+        #a partir deste vou preciso analisar o que estava no segundo dicionario para ordenar corretamente
+        listaDistanciaMenor = sorted(placesk.items(), key=lambda x: float(x[1]['distance'].split(' ')[0]))#tem split porque é um testo com numeros e "kms"
         dicDistanciaMenor = dict(listaDistanciaMenor)
         for key, dados in dicDistanciaMenor.items():
             print(f'{key}:')
