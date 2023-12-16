@@ -107,17 +107,16 @@ def filtrar(placesk, filtro):
 def main(filtro):
 
     #input do utilizador:
-    #localização=input("Insira a sua posição em latitude e longitude separados por virgula: ")
-    localização="20,54"
+
+    localização=input("Insira a sua posição em latitude e longitude separados por virgula, sem espaços: ")
     coordenadas=localização.split(",")
-    #raio=float(input("Quão longe quer viajar em kms: "))
-    raio=5000
+
+    raio=float(input("Quão longe quer viajar em kms: "))
     raiom=str(raio*1000)
-    distance=0
-    #limit=int(input("Insira qual o número máximo de lugares que quer ver: "))
-    limit = 10
-    #atrações=input("Insira as suas atrações desejadas separados por virgula, sem espaços: ")
-    atrações = "pet,bingus,accommodation,caralho,yeet,commercial,food,drikn"
+    
+    limit=int(input("Insira qual o número máximo de lugares que quer ver: "))
+
+    atrações=input("Insira as suas atrações desejadas separados por virgula, sem espaços: ")
     atraçõesList=atrações.split(",")
     
     #criação de uma lista com as categorias existentes para comparação:
