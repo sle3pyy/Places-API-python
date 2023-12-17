@@ -1,16 +1,21 @@
 import requests
+import pycountry
+from forex_python.bitcoin import BtcConverter
+import pytz
 
 def link(coordenadas,raiom,atraçõeslista,limit):
     url="https://api.geoapify.com/v2/places"
     apiKey="&apiKey=048fde22cdb44f41963fb00652ca6298"
     limit = str(limit)
     url1=url +"?categories=" + atraçõeslista +"&filter=circle:"+coordenadas[0]+","+coordenadas[1]+","+raiom+ "&bias=proximity:" + coordenadas[0]+","+coordenadas[1]+ "&limit="+ limit + apiKey
+    print(url1)
     return url1
     #Função que cria e retorna o url da API
     
 def request(url):
     response = requests.get(url)
     API_Data = response.json()
+    print(API_Data)
     return API_Data 
     #função que vai buscar os dados da API e retorna para o main       
 
@@ -25,15 +30,22 @@ def info(APIdata, filtro):
         try:            
             placesk[a["name"]]={}
             placesk[a["name"]]["country"]=a["country"]
+            country = pycountry.countries.get(name=a["country"])
+            if country:
+                b = BtcConverter()
+                currency = b.get_symbol(country.alpha_2)
+                placesk[a["name"]]["currency"] = currency if currency else "Unknown"
+                timezone = pytz.country_timezones.get(country.alpha_2)
+                placesk[a["name"]]["timezone"] = timezone[0] if timezone else "Unknown"
             placesk[a["name"]]["city"]=a["city"]
             placesk[a["name"]]["postcode"]=a["postcode"]
             placesk[a["name"]]["street"]=a["street"]
             placesk[a["name"]]["distance"]=str(int(a["distance"])/1000)+" kms"
+            distance = distance + a["distance"]
+            placeNum+=1
             placesk[a["name"]]["lon"]=a["lon"]
             placesk[a["name"]]["lat"]=a["lat"]
             placesk[a["name"]]["categories"]=a["categories"]
-            distance = distance + a["distance"]
-            placeNum+=1
             placesk[a["name"]]["phone"]=a["datasource"]["raw"]["phone"]
             
         except:
@@ -51,6 +63,7 @@ def info(APIdata, filtro):
             bug=0           
                 
     #manda os dados recolhidos para a filtrar e retorna o numero de lugares encontrados e a distancia total
+    print(placesk)
     filtrar(placesk, filtro)
     return distance, placeNum
    
@@ -108,15 +121,19 @@ def main(filtro):
 
     #input do utilizador:
 
-    localização=input("Insira a sua posição em latitude e longitude separados por virgula, sem espaços: ")
+    #localização=input("Insira a sua posição em latitude e longitude separados por virgula, sem espaços: ")
+    localização="40.64427,-8.64554"
     coordenadas=localização.split(",")
 
-    raio=float(input("Quão longe quer viajar em kms: "))
+    #raio=float(input("Quão longe quer viajar em kms: "))
+    raio=100000
     raiom=str(raio*1000)
     
-    limit=int(input("Insira qual o número máximo de lugares que quer ver: "))
+    #limit=int(input("Insira qual o número máximo de lugares que quer ver: "))
+    limit=50
 
-    atrações=input("Insira as suas atrações desejadas separados por virgula, sem espaços: ")
+    #atrações=input("Insira as suas atrações desejadas separados por virgula, sem espaços: ")
+    atrações="accommodation,commercial"
     atraçõesList=atrações.split(",")
     
     #criação de uma lista com as categorias existentes para comparação:
