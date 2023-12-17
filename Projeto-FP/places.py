@@ -136,7 +136,7 @@ def main(filtro):
     atraçõesList=atrações.split(",")
     
     #criação de uma lista com as categorias existentes para comparação:
-    with open(r"C:\\Users\\franc\\Documents\\FP\\projeto-FP-1\\Projeto-FP\\categories.txt") as file:
+    with open(r"categories.txt") as file:
         places = [line[:-1] for line in file]
     #comparação entre a lista de categorias e a lista de categorias inseridas pelo utilizador para eliminar as categorias que não existem:    
     for i in range(len(atraçõesList)-1, -1, -1): 
