@@ -30,13 +30,6 @@ def info(APIdata, filtro):
         try:            
             placesk[a["name"]]={}
             placesk[a["name"]]["country"]=a["country"]
-            country = pycountry.countries.get(name=a["country"])
-            if country:
-                b = BtcConverter()
-                currency = b.get_symbol(country.alpha_2)
-                placesk[a["name"]]["currency"] = currency if currency else "Unknown"
-                timezone = pytz.country_timezones.get(country.alpha_2)
-                placesk[a["name"]]["timezone"] = timezone[0] if timezone else "Unknown"
             placesk[a["name"]]["city"]=a["city"]
             placesk[a["name"]]["postcode"]=a["postcode"]
             placesk[a["name"]]["street"]=a["street"]
@@ -46,6 +39,13 @@ def info(APIdata, filtro):
             placesk[a["name"]]["lon"]=a["lon"]
             placesk[a["name"]]["lat"]=a["lat"]
             placesk[a["name"]]["categories"]=a["categories"]
+            country = pycountry.countries.get(name=a["country"])
+            if country:
+                b = BtcConverter()
+                currency = b.get_symbol(country.alpha_2)
+                placesk[a["name"]]["currency"] = currency if currency else "Unknown"
+                timezone = pytz.country_timezones.get(country.alpha_2)
+                placesk[a["name"]]["timezone"] = timezone[0] if timezone else "Unknown"
             placesk[a["name"]]["phone"]=a["datasource"]["raw"]["phone"]
             
         except:
@@ -63,7 +63,6 @@ def info(APIdata, filtro):
             bug=0           
                 
     #manda os dados recolhidos para a filtrar e retorna o numero de lugares encontrados e a distancia total
-    print(placesk)
     filtrar(placesk, filtro)
     return distance, placeNum
    
@@ -122,11 +121,11 @@ def main(filtro):
     #input do utilizador:
 
     #localização=input("Insira a sua posição em latitude e longitude separados por virgula, sem espaços: ")
-    localização="40.64427,-8.64554"
+    localização="10,10"
     coordenadas=localização.split(",")
 
     #raio=float(input("Quão longe quer viajar em kms: "))
-    raio=100000
+    raio=120
     raiom=str(raio*1000)
     
     #limit=int(input("Insira qual o número máximo de lugares que quer ver: "))
