@@ -1,21 +1,17 @@
+#TurmaP6G02
 import requests
-import pycountry
-from forex_python.bitcoin import BtcConverter
-import pytz
+import os
 
 def link(coordenadas,raiom,atraçõeslista,limit):
     url="https://api.geoapify.com/v2/places"
     apiKey="&apiKey=048fde22cdb44f41963fb00652ca6298"
-    limit = str(limit)
     url1=url +"?categories=" + atraçõeslista +"&filter=circle:"+coordenadas[0]+","+coordenadas[1]+","+raiom+ "&bias=proximity:" + coordenadas[0]+","+coordenadas[1]+ "&limit="+ limit + apiKey
-    print(url1)
     return url1
     #Função que cria e retorna o url da API
     
 def request(url):
     response = requests.get(url)
     API_Data = response.json()
-    print(API_Data)
     return API_Data 
     #função que vai buscar os dados da API e retorna para o main       
 
@@ -39,13 +35,6 @@ def info(APIdata, filtro):
             placesk[a["name"]]["lon"]=a["lon"]
             placesk[a["name"]]["lat"]=a["lat"]
             placesk[a["name"]]["categories"]=a["categories"]
-            country = pycountry.countries.get(name=a["country"])
-            if country:
-                b = BtcConverter()
-                currency = b.get_symbol(country.alpha_2)
-                placesk[a["name"]]["currency"] = currency if currency else "Unknown"
-                timezone = pytz.country_timezones.get(country.alpha_2)
-                placesk[a["name"]]["timezone"] = timezone[0] if timezone else "Unknown"
             placesk[a["name"]]["phone"]=a["datasource"]["raw"]["phone"]
             
         except:
@@ -69,6 +58,7 @@ def info(APIdata, filtro):
     
     
 def filtrar(placesk, filtro):
+    os.system("cls")
     #função que procura dentro do dicionario placesk o primeiro a chave que é cada nome da atração e depois analisa o dicionario do valor de cada chave e escolhe o valor para ordenar
     if filtro=="1":
         #neste bastou analisar a primeira chave
@@ -120,29 +110,45 @@ def main(filtro):
 
     #input do utilizador:
 
-    #localização=input("Insira a sua posição em latitude e longitude separados por virgula, sem espaços: ")
-    localização="10,10"
+    localização=input("Insira a sua posição em latitude e longitude separados por virgula, sem espaços: ")
     coordenadas=localização.split(",")
+    #repete caso a lista tiver mais ou menos do que 2 elementos e analisa o que estiver na lista se não for um número ignorando o simbolo do negativo
+    while not (len(coordenadas)==2 and (coordenadas[0].replace('-', '').replace('.', '').isnumeric() and  coordenadas[1].replace('-', '').replace('.', '').isnumeric())) :
+        print("Erro - introduza coordenadas válidas")
+        localização=input("Insira a sua posição em latitude e longitude separados por virgula, sem espaços: ")    
+        coordenadas=localização.split(",")
 
-    #raio=float(input("Quão longe quer viajar em kms: "))
-    raio=120
-    raiom=str(raio*1000)
+    raio=input("Quão longe quer viajar em kms: ")
+    while not raio.replace('.', '').isnumeric():
+        print("Erro - introduza um raio válido")
+        raio=input("Quão longe quer viajar em kms: ")
+    raiom=str(float(raio)*1000)
     
-    #limit=int(input("Insira qual o número máximo de lugares que quer ver: "))
-    limit=50
+    limit=input("Insira qual o número máximo de lugares que quer ver: ")
+    while not limit.isnumeric():
+        print("Erro - introduza um limite válido")
+        limit=input("Insira qual o número máximo de lugares que quer ver: ")
 
-    #atrações=input("Insira as suas atrações desejadas separados por virgula, sem espaços: ")
-    atrações="accommodation,commercial"
+    atrações=input("Insira as suas atrações desejadas separados por virgula, sem espaços: ")
+    while not atrações.replace(".","").replace(",","").isalpha():
+        print("Erro - introduza atrações válidas")
+        atrações=input("Insira as suas atrações desejadas separados por virgula, sem espaços: ")
     atraçõesList=atrações.split(",")
     
     #criação de uma lista com as categorias existentes para comparação:
-    with open(r"categories.txt") as file:
+    with open(r"C:\\Users\\franc\\Documents\\FP\\projeto-FP-1\\Projeto-FP\\categories.txt") as file:
         places = [line[:-1] for line in file]
     #comparação entre a lista de categorias e a lista de categorias inseridas pelo utilizador para eliminar as categorias que não existem:    
     for i in range(len(atraçõesList)-1, -1, -1): 
-        if atraçõesList[i] not in places:
+        if len(atraçõesList)>1 and (atraçõesList[i] not in places):
             atraçõesList.pop(i)
             atrações=",".join(atraçõesList)
+        elif(len(atraçõesList)==1 and (atraçõesList[i] not in places)):
+            print("Não existe tal atração")
+            atraçõesList.pop(i)
+            atrações=input("Insira as suas atrações desejadas separados por virgula, sem espaços: ")
+            atraçõesList=atrações.split(",")
+
 
     #criação do url, pedido dos dados e filtragem dos dados:
     apil=link(coordenadas,raiom,atrações,limit)
